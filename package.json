@@ -2,7 +2,7 @@
   "name": "p2wdb",
   "version": "1.0.1",
   "description": "A JavaScript npm library for reading from and writing to the PSF pay-to-write database (P2WDB).",
-  "main": "index.js",
+  "main": "dist/p2wdb.min.js",
   "scripts": {
     "start": "node index.js",
     "test": "npm run lint && TEST=unit nyc mocha test/unit/",
@@ -10,7 +10,8 @@
     "lint": "standard --env mocha --fix",
     "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "coverage:report": "nyc --reporter=html mocha test/unit/ --exit"
+    "coverage:report": "nyc --reporter=html mocha test/unit/ --exit",
+    "build": "browserify index.js -p tinyify --s P2WDB -o dist/p2wdb.min.js"
   },
   "keywords": [
     "bitcoin",
@@ -34,7 +35,7 @@
     "apidoc": "0.25.0"
   },
   "devDependencies": {
-    "browserify": "^17.0.0",
+    "browserify": "17.0.0",
     "chai": "4.2.0",
     "coveralls": "3.1.0",
     "eslint": "7.17.0",
@@ -50,7 +51,7 @@
     "semantic-release": "17.4.2",
     "sinon": "9.2.2",
     "standard": "16.0.4",
-    "tinyify": "^3.0.0"
+    "tinyify": "3.0.0"
   },
   "release": {
     "publish": [
@@ -62,7 +63,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint"
+      "pre-commit": "npm run lint && npm run build"
     }
   }
 }
