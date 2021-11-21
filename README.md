@@ -1,20 +1,9 @@
-# npm-lib-boilerplate
+# P2WDB
 
-This repository is a code 'boilerplate' for starting a new npm library. It
-contains the following features:
+A JavaScript npm library for reading from and writing to the PSF pay-to-write database (P2WDB).
 
-- [Semantic Release](https://github.com/semantic-release/semantic-release) configured to work with [Travis CI](https://travis-ci.org/).
-- Automatic linting using [Standard](https://www.npmjs.com/package/standard) JavaScript.
-- Unit and integration tests using Mocha and Chai, following the best practices and design patterns in [this YouTube video](https://www.youtube.com/watch?v=lE3RYnchHps):
-  - Uses ECMAScript 2015 `Class` for business logic and utility libraries.
-  - Follows [TDD](https://builttoadapt.io/why-tdd-489fdcdda05e) best practices.
-  - Uses `_this` to maintain context to the instance of the class.
-  - Uses [Sinon stubs](https://sinonjs.org/releases/latest/stubs/) to mock external dependencies for unit tests.
-  - Each function is wrapped in try/catch statements, allowing thrown errors to 'bubble up' to the top-level function, and give every function along the way an opportunity to handle exceptions.
-  - Testing assertions focus on properties and structure, not values.
-
+This library is compiled with webpack to make is usable by both node.js and browser-based JavaScript implementations. It provides convenience methods for reading from and writing to the P2WDB. [FullStack.cash](https://fullstack.cash) provides a block explorer for the P2WDB at [explorer.FullStack.cash](https://explorer.fullstack.cash).
 
 # Licence
+
 [MIT](LICENSE.md)
-
-

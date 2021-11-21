@@ -1,7 +1,7 @@
 {
   "name": "p2wdb",
   "version": "1.0.0",
-  "description": "A boilerplate for creating an npm library with Semantic Release, linting, and tests.",
+  "description": "A JavaScript npm library for reading from and writing to the PSF pay-to-write database (P2WDB).",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -15,25 +15,22 @@
   "keywords": [
     "bitcoin",
     "bitcoin cash",
-    "wallet",
-    "javascript",
-    "cryptocurrency",
-    "react",
-    "front end",
-    "client",
-    "apidoc",
+    "tokens",
+    "p2wdb",
+    "database",
+    "pay-to-write",
     "slp",
-    "tokens"
+    "psf"
   ],
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "license": "MIT",
   "apidoc": {
-    "title": "npm-lib-boilerplate",
+    "title": "p2wdb",
     "url": "localhost:5000"
   },
-  "repository": "christroutner/npm-lib-boilerplate",
+  "repository": "Permissionless-Software-Foundation/p2wdb",
   "dependencies": {
-    "@psf/bch-js": "4.20.21",
+    "@psf/bch-js": "4.20.26",
     "apidoc": "0.25.0"
   },
   "devDependencies": {
@@ -51,7 +48,7 @@
     "nyc": "15.1.0",
     "semantic-release": "17.4.2",
     "sinon": "9.2.2",
-    "standard": "^16.0.4"
+    "standard": "16.0.4"
   },
   "release": {
     "publish": [
