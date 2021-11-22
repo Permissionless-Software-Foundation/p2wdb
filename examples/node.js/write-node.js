@@ -8,7 +8,7 @@ const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
 // SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
 
-const { Write } = require('../index')
+const { Write } = require('../../index')
 // const { Write } = require('p2wdb')
 
 async function writeNode () {
