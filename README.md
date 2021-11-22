@@ -37,11 +37,29 @@ const read = new Read()
 
 #### `getPage()`
 
-The `getPage()` method will return a 'page' of 20 entries. Older entries exist in older pages. Pages are integers.
+The `getPage()` method will return a 'page' of the latest 20 entries. Newer entries are served first, older entries are accessed by increasing the 'page' integer.
 
 ```
 // Get the second page of results.
 const results = await read.getPage(2)
+
+// Get the latest 20 entries in the database.
+const result = await read.getPage() // default: page = 0
+```
+
+#### `getByAppId()`
+
+Similar to `getPage()`, this method will return up to 20 entries, filtered by their `appId`.
+
+```
+// Get the second page of results for the service metrics app.
+const appId = 'psf-ipfs-metrics-0001'
+const result = await read.getByAppId(appId, 2)
+
+// Get the latest 20 entries of service metrics.
+const appId = 'psf-ipfs-metrics-0001'
+const result = await read.getByAppId(appId) // default: page = 0
+
 ```
 
 #### `getByHash()`
@@ -60,15 +78,6 @@ The `getByTxid()` method will return an entry based on the proof-of-burn TXID us
 ```
 const hash = '4751fddd9ee2310d39dc0dbf92a5482eb1fc5301789f6d17df4363554f74842a'
 const result = await read.getByTxid(hash)
-```
-
-#### `getByAppId()`
-
-Similar to `getPage()`, this method will return up to 20 entries, identified by their `appId`.
-
-```
-const appId = 'psf-ipfs-metrics-0001'
-const result = await read.getByAppId(appId)
 ```
 
 ### Write
