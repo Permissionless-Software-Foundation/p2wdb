@@ -30,6 +30,7 @@ describe('#read.js', () => {
 
       assert.isArray(result)
       assert.property(result[0], 'isValid')
+      assert.equal(result.length, 20)
     })
   })
 
@@ -46,7 +47,8 @@ describe('#read.js', () => {
 
   describe('#getByTxid', () => {
     it('should get an entry by its hash', async () => {
-      const txid = 'f58083223df3b4bb01b5a3f4ad4b847a42cfd6b6d27d0b342cad5056be36d7da'
+      const txid =
+        'f58083223df3b4bb01b5a3f4ad4b847a42cfd6b6d27d0b342cad5056be36d7da'
 
       const result = await uut.getByTxid(txid)
       // console.log('result: ', result)
@@ -64,6 +66,7 @@ describe('#read.js', () => {
 
       assert.isArray(result)
       assert.property(result[0], 'isValid')
+      assert.equal(result.length, 20)
     })
   })
 })

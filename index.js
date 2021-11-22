@@ -7,13 +7,7 @@
 
 'use strict'
 
-const ReadP2wdb = require('./lib/read')
+const Read = require('./lib/read')
+const Write = require('./lib/write')
 
-class P2WDB {
-  constructor () {
-    // Encapsulate dependencies
-    this.read = new ReadP2wdb()
-  }
-}
-
-module.exports = P2WDB
+module.exports = { Read, Write }
