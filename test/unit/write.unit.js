@@ -17,7 +17,9 @@ const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
 
 describe('#read.js', () => {
-  let uut, sandbox, mockData
+  let uut, mockData
+  /** @type {sinon.SinonSandbox} */
+  let sandbox
 
   beforeEach(() => {
     // Restore the sandbox before each test.
@@ -42,6 +44,21 @@ describe('#read.js', () => {
           'WIF private key required when instantiating P2WDB Write library.'
         )
       }
+    })
+
+    it('should use the server passed as parameter', async () => {
+      const serverURL = 'http://localhost:5700'
+      uut = new Write({ wif: WIF, noUpdate: true, serverURL })
+
+      assert.property(uut, 'serverURL')
+      assert.equal(uut.serverURL, serverURL)
+    })
+
+    it('should fall back to the fullstack.cash node', async () => {
+      uut = new Write({ wif: WIF, noUpdate: true })
+
+      assert.property(uut, 'serverURL')
+      assert.equal(uut.serverURL, 'https://p2wdb.fullstack.cash')
     })
   })
 
@@ -132,9 +149,12 @@ describe('#read.js', () => {
   describe('#postEntry', () => {
     it('should post new entry to P2WDB', async () => {
       // Mock dependencies to force code path
+      const serverURL = 'http://localhost:5700'
+      uut = new Write({ wif: WIF, noUpdate: true, serverURL })
+
       sandbox.stub(uut, 'checkForSufficientFunds').resolves()
       sandbox.stub(uut, 'burnPsf').resolves('fake-txid')
-      sandbox.stub(uut.axios, 'post').resolves({ data: 'test-data' })
+      const postStub = sandbox.stub(uut.axios, 'post').resolves({ data: 'test-data' })
 
       const data = {
         test: 'test'
@@ -143,6 +163,8 @@ describe('#read.js', () => {
       // console.log('result: ', result)
 
       assert.equal(result, 'test-data')
+      // make sure the given serverURL is used in the axios call
+      assert.include(postStub.args[0][0], serverURL)
     })
   })
 })
