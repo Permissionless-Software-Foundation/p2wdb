@@ -21,6 +21,23 @@ describe('#read.js', () => {
 
   afterEach(() => sandbox.restore())
 
+  describe('#constructor', () => {
+    it('should use the server passed as parameter', async () => {
+      const serverURL = 'http://localhost:5700'
+      uut = new ReadP2wdb({ serverURL })
+
+      assert.property(uut, 'serverURL')
+      assert.equal(uut.serverURL, serverURL)
+    })
+
+    it('should fall back to the fullstack.cash node', async () => {
+      uut = new ReadP2wdb()
+
+      assert.property(uut, 'serverURL')
+      assert.equal(uut.serverURL, 'https://p2wdb.fullstack.cash')
+    })
+  })
+
   describe('#getPage', () => {
     it('should get default page 0', async () => {
       // Mock dependencies
