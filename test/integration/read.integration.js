@@ -36,7 +36,7 @@ describe('#read.js', () => {
 
   describe('#getByHash', () => {
     it('should get an entry by its hash', async () => {
-      const hash = 'zdpuAo81epCeU5c76JK5EwMtmtMP16fyfLmLe2QhZbghAYKNS'
+      const hash = 'zdpuApscHvngKSHssaVJ43Zyj6UhxvFSB94JnfxP1n14cfVvN'
 
       const result = await uut.getByHash(hash)
       // console.log('result: ', result)
@@ -48,7 +48,7 @@ describe('#read.js', () => {
   describe('#getByTxid', () => {
     it('should get an entry by its hash', async () => {
       const txid =
-        'f58083223df3b4bb01b5a3f4ad4b847a42cfd6b6d27d0b342cad5056be36d7da'
+      '129797f3989d07a40dcd18ff560f813a604566d3b60128362055fba66d11c9cf'
 
       const result = await uut.getByTxid(txid)
       // console.log('result: ', result)
