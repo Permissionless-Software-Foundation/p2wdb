@@ -16,7 +16,7 @@ const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
 // SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
 
-describe('#read.js', () => {
+describe('#write.js', () => {
   let uut, mockData
   /** @type {sinon.SinonSandbox} */
   let sandbox
@@ -62,6 +62,17 @@ describe('#read.js', () => {
     })
   })
 
+  describe('#getWriteCostPsf', () => {
+    it('should get the cost of a write from P2WDB service', async () => {
+      // Mock network call
+      sandbox.stub(uut.axios, 'get').resolves({ data: { psfCost: 0.133 } })
+
+      const result = await uut.getWriteCostPsf()
+
+      assert.equal(result, 0.133)
+    })
+  })
+
   describe('#checkForSufficientFunds', () => {
     it('should throw error if balance is less than sat threshold', async () => {
       try {
@@ -84,6 +95,7 @@ describe('#read.js', () => {
         // Force desired code path.
         sandbox.stub(uut.bchWallet, 'getBalance').resolves(10000)
         sandbox.stub(uut.bchWallet, 'listTokens').resolves([])
+        sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
 
         await uut.checkForSufficientFunds()
 
@@ -100,6 +112,7 @@ describe('#read.js', () => {
         sandbox
           .stub(uut.bchWallet, 'listTokens')
           .resolves(mockData.tokenOutput01)
+        sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
 
         await uut.checkForSufficientFunds()
 
@@ -114,6 +127,7 @@ describe('#read.js', () => {
       sandbox.stub(uut.bchWallet, 'getBalance').resolves(10000)
       mockData.tokenOutput01[0].qty = 10
       sandbox.stub(uut.bchWallet, 'listTokens').resolves(mockData.tokenOutput01)
+      sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
 
       const result = await uut.checkForSufficientFunds()
 
