@@ -21,13 +21,13 @@ describe('#write.js', () => {
   /** @type {sinon.SinonSandbox} */
   let sandbox
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Restore the sandbox before each test.
     sandbox = sinon.createSandbox()
 
     mockData = cloneDeep(mockDataLib)
 
-    uut = new Write({ wif: WIF, noUpdate: true })
+    uut = new Write({ wif: WIF })
   })
 
   afterEach(() => sandbox.restore())
@@ -77,6 +77,7 @@ describe('#write.js', () => {
     it('should throw error if balance is less than sat threshold', async () => {
       try {
         // Force desired code path.
+        uut.bchWallet.isInitialized = true
         sandbox.stub(uut.bchWallet, 'getBalance').resolves(100)
 
         await uut.checkForSufficientFunds()
@@ -90,48 +91,56 @@ describe('#write.js', () => {
       }
     })
 
-    it('should throw error if WIF controlls no PSF tokens', async () => {
-      try {
-        // Force desired code path.
-        sandbox.stub(uut.bchWallet, 'getBalance').resolves(10000)
-        sandbox.stub(uut.bchWallet, 'listTokens').resolves([])
-        sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
-
-        await uut.checkForSufficientFunds()
-
-        assert.fail('Unexpected code path')
-      } catch (err) {
-        assert.equal(err.message, 'Wallet has no PSF tokens.')
-      }
-    })
-
-    it('should throw error if address does not have enough PSF tokens', async () => {
-      try {
-        // Force desired code path.
-        sandbox.stub(uut.bchWallet, 'getBalance').resolves(10000)
-        sandbox
-          .stub(uut.bchWallet, 'listTokens')
-          .resolves(mockData.tokenOutput01)
-        sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
-
-        await uut.checkForSufficientFunds()
-
-        assert.fail('Unexpected code path')
-      } catch (err) {
-        assert.include(err.message, 'which is not enough')
-      }
-    })
-
-    it('should return true if WIF controls adaquate resources', async () => {
+    it('should return PSF cost if WIF controls PSF tokens', async () => {
       // Force desired code path.
+      uut.bchWallet.isInitialized = true
       sandbox.stub(uut.bchWallet, 'getBalance').resolves(10000)
       mockData.tokenOutput01[0].qty = 10
       sandbox.stub(uut.bchWallet, 'listTokens').resolves(mockData.tokenOutput01)
       sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
 
       const result = await uut.checkForSufficientFunds()
+      // console.log('result: ', result)
 
-      assert.equal(result, true)
+      assert.equal(result.hasEnoughPsf, 0.133)
+      assert.equal(result.hasEnoughBch, false)
+      assert.equal(result.bchAddr, '')
+    })
+
+    it('should return BCH cost if WIF controls BCH and no PSF tokens', async () => {
+      // Force desired code path.
+      uut.bchWallet.isInitialized = true
+      sandbox.stub(uut.bchWallet, 'getBalance').resolves(100000)
+      mockData.tokenOutput01[0].qty = 0
+      sandbox.stub(uut.bchWallet, 'listTokens').resolves(mockData.tokenOutput01)
+      sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
+      sandbox.stub(uut, 'getWriteCostBch').resolves({ bchCost: 10000, address: 'fake-addr' })
+
+      const result = await uut.checkForSufficientFunds()
+      // console.log('result: ', result)
+
+      assert.equal(result.hasEnoughPsf, false)
+      assert.equal(result.hasEnoughBch, 10000)
+      assert.equal(result.bchAddr, 'fake-addr')
+    })
+
+    it('should throw an error if wallet does not have enough BCH or PSF', async () => {
+      // Force desired code path.
+      // uut.bchWallet.isInitialized = true
+      sandbox.stub(uut.bchWallet, 'initialize').resolves()
+      sandbox.stub(uut.bchWallet, 'getBalance').resolves(6000)
+      mockData.tokenOutput01 = []
+      sandbox.stub(uut.bchWallet, 'listTokens').resolves(mockData.tokenOutput01)
+      sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
+      sandbox.stub(uut, 'getWriteCostBch').resolves({ bchCost: 10000, address: 'fake-addr' })
+
+      try {
+        await uut.checkForSufficientFunds()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'Provided wallet does not have enough PSF tokens or BCH to pay for a write.')
+      }
     })
   })
 
@@ -161,12 +170,16 @@ describe('#write.js', () => {
   })
 
   describe('#postEntry', () => {
-    it('should post new entry to P2WDB', async () => {
+    it('should post new entry to P2WDB while paying PSF tokens', async () => {
       // Mock dependencies to force code path
       const serverURL = 'http://localhost:5700'
       uut = new Write({ wif: WIF, noUpdate: true, serverURL })
 
-      sandbox.stub(uut, 'checkForSufficientFunds').resolves()
+      sandbox.stub(uut, 'checkForSufficientFunds').resolves({
+        hasEnoughPsf: 10,
+        hasEnoughBch: false,
+        bchAddr: ''
+      })
       sandbox.stub(uut, 'burnPsf').resolves('fake-txid')
       const postStub = sandbox.stub(uut.axios, 'post').resolves({ data: 'test-data' })
 
@@ -179,6 +192,48 @@ describe('#write.js', () => {
       assert.equal(result, 'test-data')
       // make sure the given serverURL is used in the axios call
       assert.include(postStub.args[0][0], serverURL)
+    })
+
+    it('should post new entry to P2WDB while paying BCH', async () => {
+      // Mock dependencies to force code path
+      const serverURL = 'http://localhost:5700'
+      uut = new Write({ wif: WIF, serverURL })
+
+      sandbox.stub(uut, 'checkForSufficientFunds').resolves({
+        hasEnoughPsf: false,
+        hasEnoughBch: 100000,
+        bchAddr: 'fake-addr'
+      })
+      // sandbox.stub(uut, 'burnPsf').resolves('fake-txid')
+      sandbox.stub(uut.bchWallet, 'send').resolves('fake-txid')
+      sandbox.stub(uut.bchWallet.bchjs.Util, 'sleep').resolves()
+      sandbox.stub(uut.axios, 'post').resolves({ data: { fake: 'test-data' } })
+
+      const data = {
+        test: 'test'
+      }
+      const result = await uut.postEntry(data)
+      // console.log('result: ', result)
+
+      assert.equal(result.fake, 'test-data')
+      assert.equal(result.paymentTxid, 'fake-txid')
+    })
+  })
+
+  describe('#getWriteCostBch', () => {
+    it('should retrieve the write cost in BCH', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.axios, 'get').resolves({
+        data: {
+          bchCost: 10000,
+          address: 'fake-address'
+        }
+      })
+
+      const result = await uut.getWriteCostBch()
+
+      assert.equal(result.bchCost, 10000)
+      assert.equal(result.address, 'fake-address')
     })
   })
 })
