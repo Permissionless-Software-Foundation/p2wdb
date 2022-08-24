@@ -31,9 +31,9 @@
   },
   "repository": "Permissionless-Software-Foundation/p2wdb",
   "dependencies": {
-    "apidoc": "0.25.0",
+    "apidoc": "0.52.0",
     "axios": "0.24.0",
-    "minimal-slp-wallet": "4.4.2"
+    "minimal-slp-wallet": "5.0.0"
   },
   "devDependencies": {
     "browserify": "17.0.0",
@@ -47,9 +47,9 @@
     "eslint-plugin-standard": "4.0.0",
     "husky": "4.3.8",
     "lodash.clonedeep": "4.5.0",
-    "mocha": "8.4.0",
+    "mocha": "^10.0.0",
     "nyc": "15.1.0",
-    "semantic-release": "17.4.2",
+    "semantic-release": "^19.0.5",
     "sinon": "9.2.2",
     "standard": "16.0.4",
     "tinyify": "3.0.0"

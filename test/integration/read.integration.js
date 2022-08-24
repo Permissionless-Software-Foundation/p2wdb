@@ -36,7 +36,7 @@ describe('#read.js', () => {
 
   describe('#getByHash', () => {
     it('should get an entry by its hash', async () => {
-      const hash = 'zdpuApscHvngKSHssaVJ43Zyj6UhxvFSB94JnfxP1n14cfVvN'
+      const hash = 'zdpuB3Y7JM5snxZpriPxQbGYQKBcWoXyXXBg5JjpBDR4af53t'
 
       const result = await uut.getByHash(hash)
       // console.log('result: ', result)
@@ -48,7 +48,7 @@ describe('#read.js', () => {
   describe('#getByTxid', () => {
     it('should get an entry by its hash', async () => {
       const txid =
-      '129797f3989d07a40dcd18ff560f813a604566d3b60128362055fba66d11c9cf'
+      '0d40d39de19a0f0d92d030995887cc931970a908e359db2fc63f21e657715998'
 
       const result = await uut.getByTxid(txid)
       // console.log('result: ', result)
@@ -59,14 +59,14 @@ describe('#read.js', () => {
 
   describe('#getByAppId', () => {
     it('should get an entry by its hash', async () => {
-      const id = 'psf-ipfs-metrics-0001'
+      const id = 'test'
 
       const result = await uut.getByAppId(id)
       // console.log('result: ', result)
 
       assert.isArray(result)
       assert.property(result[0], 'isValid')
-      assert.equal(result.length, 20)
+      assert.isAbove(result.length, 0)
     })
   })
 })
