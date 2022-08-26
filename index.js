@@ -9,5 +9,6 @@
 
 const Read = require('./lib/read')
 const Write = require('./lib/write')
+const Pin = require('./lib/pin')
 
-module.exports = { Read, Write }
+module.exports = { Read, Write, Pin }
