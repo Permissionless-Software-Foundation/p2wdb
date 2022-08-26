@@ -33,7 +33,7 @@
   "dependencies": {
     "apidoc": "0.52.0",
     "axios": "0.24.0",
-    "minimal-slp-wallet": "5.0.0"
+    "minimal-slp-wallet": "5.0.3"
   },
   "devDependencies": {
     "browserify": "17.0.0",

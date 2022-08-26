@@ -15,7 +15,7 @@ const { Write } = require('../../index')
 
 async function writeNode () {
   try {
-    const write = new Write({ wif: WIF, serverURL })
+    const write = new Write({ wif: WIF, serverURL, interface: 'consumer-api' })
 
     // Generate the data that will be written to the P2WDB.
     const appId = 'test'
