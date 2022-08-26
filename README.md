@@ -81,10 +81,7 @@ const result = await read.getByTxid(hash)
 
 ### Write
 
-Instantiating the `Write` class requires a [WIF private key](https://github.com/bitcoinbook/bitcoinbook/blob/a3229bbbc0c929dc53ec11365051a6782695cb52/ch04.asciidoc). The private key should have control of:
-
-- At least 5,000 sats of BCH.
-- At least 0.1 PSF tokens.
+Instantiating the `Write` class requires a [WIF private key](https://github.com/bitcoinbook/bitcoinbook/blob/a3229bbbc0c929dc53ec11365051a6782695cb52/ch04.asciidoc). The private key should have control a few cents worth of BCH.
 
 If the private key meets those minimum requirements, it can write data to the P2WDB.
 
@@ -92,17 +89,19 @@ The example below is copied from the [node.js write example](./examples/node.js/
 
 ```javascript
 // Replace this private key and public address with your own. You can generate
-// new keys at wallet.fullstack.cash.
+// new values at wallet.fullstack.cash.
 const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
 // SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
 
-const { Write } = require('../index')
+const serverURL = 'http://localhost:5010'
+
+const { Write } = require('../../index')
 // const { Write } = require('p2wdb')
 
-async function writeNode() {
+async function writeNode () {
   try {
-    const write = new Write({ wif: WIF })
+    const write = new Write({ wif: WIF, serverURL, interface: 'consumer-api' })
 
     // Generate the data that will be written to the P2WDB.
     const appId = 'test'
@@ -118,6 +117,39 @@ async function writeNode() {
   }
 }
 writeNode()
+```
+
+### Pin
+
+Some instances of P2WDB run the [p2wdb-pinning-service](https://github.com/Permissionless-Software-Foundation/p2wdb-pinning-service). Currently the network only supports pinning files 1MB or smaller. Pinning ensure that an IPFS node retains the data and makes it available to the IPFS network.
+
+Here is an example to pin a piece of content to the P2WDB pinning cluster:
+```js
+// Replace this private key and public address with your own. You can generate
+// new values at wallet.fullstack.cash.
+const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
+// BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
+// SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
+
+// Replace this with your own IPFS CID. It should be less than 1 MB in size.
+const CID = 'bafybeidmxb6au63p6t7wxglks3t6rxgt6t26f3gx26ezamenznkjdnwqta'
+
+const { Pin } = require('../../index')
+// const { Pin } = require('p2wdb')
+
+async function pinCid (cid) {
+  try {
+    const pin = new Pin({ wif: WIF, interface: 'consumer-api' })
+
+    const outData = await pin.cid(cid)
+    console.log('outData: ', outData)
+
+    console.log(`IPFS CID ${CID} pinned with P2WDB entry`)
+  } catch (err) {
+    console.error(err)
+  }
+}
+pinCid(CID)
 ```
 
 # Licence
