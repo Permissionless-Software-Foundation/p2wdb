@@ -21,7 +21,9 @@ async function pinCid (cid) {
     const outData = await pin.cid(cid)
     console.log('outData: ', outData)
 
-    console.log(`IPFS CID ${CID} pinned with P2WDB entry`)
+    const hash = outData.hash.hash
+
+    console.log(`IPFS CID ${CID} pinned with P2WDB entry ${hash}`)
   } catch (err) {
     console.error(err)
   }
