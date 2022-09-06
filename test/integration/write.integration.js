@@ -4,6 +4,7 @@
 
 // Public npm libraries
 const assert = require('chai').assert
+const BchWallet = require('minimal-slp-wallet/index')
 
 // Local libraries
 const WriteP2wdb = require('../../lib/write')
@@ -13,7 +14,8 @@ describe('#write.js', () => {
 
   beforeEach(() => {
     const wif = 'L2WXayLcTiX6GoZ9Mk5tPNRDVcmYhFP5KMUU1p8sdJwXpVytXnTS'
-    uut = new WriteP2wdb({ wif })
+    const bchWallet = new BchWallet(wif, { interface: 'consumer-api' })
+    uut = new WriteP2wdb({ bchWallet })
   })
 
   describe('#getWriteCostPsf', () => {

@@ -6,6 +6,7 @@
 const assert = require('chai').assert
 const sinon = require('sinon')
 const cloneDeep = require('lodash.clonedeep')
+const BchWallet = require('minimal-slp-wallet/index')
 
 // Local libraries
 const Write = require('../../lib/write')
@@ -18,7 +19,6 @@ const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 
 describe('#write.js', () => {
   let uut, mockData
-  /** @type {sinon.SinonSandbox} */
   let sandbox
 
   beforeEach(async () => {
@@ -27,13 +27,15 @@ describe('#write.js', () => {
 
     mockData = cloneDeep(mockDataLib)
 
-    uut = new Write({ wif: WIF })
+    const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
+    await bchWallet.walletInfoPromise
+    uut = new Write({ bchWallet })
   })
 
   afterEach(() => sandbox.restore())
 
   describe('#constructor', () => {
-    it('should throw an error if WIF is not included', () => {
+    it('should throw an error if bchWallet is not included', () => {
       try {
         uut = new Write()
 
@@ -41,21 +43,23 @@ describe('#write.js', () => {
       } catch (err) {
         assert.equal(
           err.message,
-          'WIF private key required when instantiating P2WDB Write library.'
+          'Must pass instance of minimal-slp-wallet as bchWallet when instantiating P2WDB Write library.'
         )
       }
     })
 
     it('should use the server passed as parameter', async () => {
+      const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
       const serverURL = 'http://localhost:5700'
-      uut = new Write({ wif: WIF, noUpdate: true, serverURL })
+      uut = new Write({ bchWallet, serverURL })
 
       assert.property(uut, 'serverURL')
       assert.equal(uut.serverURL, serverURL)
     })
 
     it('should fall back to the fullstack.cash node', async () => {
-      uut = new Write({ wif: WIF, noUpdate: true })
+      const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
+      uut = new Write({ bchWallet })
 
       assert.property(uut, 'serverURL')
       assert.equal(uut.serverURL, 'https://p2wdb.fullstack.cash')
@@ -171,10 +175,13 @@ describe('#write.js', () => {
 
   describe('#postEntry', () => {
     it('should post new entry to P2WDB while paying PSF tokens', async () => {
-      // Mock dependencies to force code path
-      const serverURL = 'http://localhost:5700'
-      uut = new Write({ wif: WIF, noUpdate: true, serverURL })
+      const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
+      await bchWallet.walletInfoPromise
 
+      const serverURL = 'http://localhost:5700'
+      uut = new Write({ bchWallet, serverURL })
+
+      // Mock dependencies to force code path
       sandbox.stub(uut, 'checkForSufficientFunds').resolves({
         hasEnoughPsf: 10,
         hasEnoughBch: false,
@@ -195,10 +202,13 @@ describe('#write.js', () => {
     })
 
     it('should post new entry to P2WDB while paying BCH', async () => {
-      // Mock dependencies to force code path
-      const serverURL = 'http://localhost:5700'
-      uut = new Write({ wif: WIF, serverURL })
+      const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
+      await bchWallet.walletInfoPromise
 
+      const serverURL = 'http://localhost:5700'
+      uut = new Write({ bchWallet, serverURL })
+
+      // Mock dependencies to force code path
       sandbox.stub(uut, 'checkForSufficientFunds').resolves({
         hasEnoughPsf: false,
         hasEnoughBch: 100000,

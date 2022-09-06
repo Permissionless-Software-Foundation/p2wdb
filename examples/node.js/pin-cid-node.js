@@ -2,6 +2,9 @@
   This code example shows how to pin an IPFS CID using this library.
 */
 
+// Global npm libraries
+const BchWallet = require('minimal-slp-wallet/index')
+
 // Replace this private key and public address with your own. You can generate
 // new values at wallet.fullstack.cash.
 const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
@@ -18,7 +21,12 @@ const { Pin } = require('../../index')
 
 async function pinCid (cid) {
   try {
-    const pin = new Pin({ wif: WIF, interface: 'consumer-api', serverURL: SERVER })
+    // Instantiate the BCH wallet.
+    const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
+    await bchWallet.walletInfoPromise
+    await bchWallet.initialize()
+
+    const pin = new Pin({ bchWallet, serverURL: SERVER })
 
     const outData = await pin.cid(cid)
     console.log('outData: ', outData)

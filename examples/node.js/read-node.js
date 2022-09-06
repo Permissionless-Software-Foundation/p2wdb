@@ -5,7 +5,7 @@
 const { Read } = require('../../index')
 // const { Read } = require('p2wdb')
 
-const hash = 'zdpuAmJ7xBpzTrX3dJSZ3kGGWCJ12pjbcot2hTx4qavtKHb2B'
+const hash = 'zdpuB3EnMBne7fePcj9saqF7rU8Zxv7hhkW4xqNNA5Sm2765o'
 
 async function readHash () {
   try {
