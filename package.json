@@ -1,6 +1,6 @@
 {
   "name": "p2wdb",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "A JavaScript npm library for reading from and writing to the PSF pay-to-write database (P2WDB).",
   "main": "dist/p2wdb.min.js",
   "scripts": {
