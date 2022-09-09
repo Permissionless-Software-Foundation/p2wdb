@@ -14,7 +14,8 @@ const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // Replace this with your own IPFS CID. It should be less than 1 MB in size.
 const CID = 'bafybeidmxb6au63p6t7wxglks3t6rxgt6t26f3gx26ezamenznkjdnwqta'
 
-const SERVER = 'https://pearson-p2wdb.fullstackcash.nl'
+// const SERVER = 'https://pearson-p2wdb.fullstackcash.nl'
+const SERVER = 'http://localhost:5010'
 
 const { Pin } = require('../../index')
 // const { Pin } = require('p2wdb')
