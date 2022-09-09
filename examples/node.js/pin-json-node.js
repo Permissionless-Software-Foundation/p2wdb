@@ -31,7 +31,7 @@ async function pinCid (zcid) {
     const result = await pin.json(zcid)
     console.log('result ', result)
 
-    // const cid = 
+    // const cid =
   } catch (err) {
     console.error(err)
   }
