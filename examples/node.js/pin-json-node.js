@@ -1,5 +1,5 @@
 /*
-  This is a code example for writing data to the P2WDB using node.js JavaScript.
+  This code example shows how to pin an IPFS CID using this library.
 */
 
 // Global npm libraries
@@ -11,32 +11,29 @@ const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
 // SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
 
-// const serverURL = 'https://p2wdb.fullstack.cash'
-const serverURL = 'http://localhost:5010'
+// const SERVER = 'https://pearson-p2wdb.fullstackcash.nl'
+const SERVER = 'http://localhost:5010'
 
-const { Write } = require('../../index')
-// const { Write } = require('p2wdb')
+const p2wdbCid = 'zdpuAqc2yMsrdM39gDyhhoCSPpoceGjaTJforddKhaGjBjVUD'
 
-async function writeNode () {
+const { Pin } = require('../../index')
+// const { Pin } = require('p2wdb')
+
+async function pinCid (zcid) {
   try {
     // Instantiate the BCH wallet.
     const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
     await bchWallet.walletInfoPromise
     await bchWallet.initialize()
 
-    const write = new Write({ bchWallet, serverURL })
+    const pin = new Pin({ bchWallet, serverURL: SERVER })
 
-    // Generate the data that will be written to the P2WDB.
-    const appId = 'test'
-    const data = {
-      now: new Date(),
-      data: 'This is some test data.'
-    }
+    const result = await pin.json(zcid)
+    console.log('result ', result)
 
-    const result = await write.postEntry(data, appId)
-    console.log(`Data about P2WDB write: ${JSON.stringify(result, null, 2)}`)
+    // const cid = 
   } catch (err) {
     console.error(err)
   }
 }
-writeNode()
+pinCid(p2wdbCid)

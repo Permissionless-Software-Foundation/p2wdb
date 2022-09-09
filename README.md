@@ -1,8 +1,8 @@
 # P2WDB
 
-A JavaScript npm library for reading from and writing to the [PSF](http://psfoundation.cash) pay-to-write database (P2WDB). To learn more about the P2WDB, [check out this video](https://youtu.be/korI-8W240s).
+A JavaScript npm library for reading from and writing to the [PSF](http://psfoundation.cash) pay-to-write database (P2WDB). To learn more about the P2WDB, [check out this video](https://youtu.be/korI-8W240s). Additional documentation can be found at [P2WDB.com](https://p2wdb.com).
 
-This library is compiled with webpack to make is usable by both node.js and browser-based JavaScript implementations. It provides convenience methods for reading from and writing to the P2WDB. [FullStack.cash](https://fullstack.cash) provides a block explorer for the P2WDB at [explorer.FullStack.cash](https://explorer.fullstack.cash).
+This library is compiled with Browserify to make is usable by both node.js and browser-based JavaScript implementations. It provides convenience methods for reading from and writing to the P2WDB. [FullStack.cash](https://fullstack.cash) provides a block explorer for the P2WDB at [explorer.FullStack.cash](https://explorer.fullstack.cash).
 
 ## How To Use It?
 
