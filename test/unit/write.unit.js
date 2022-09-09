@@ -217,7 +217,15 @@ describe('#write.js', () => {
       // sandbox.stub(uut, 'burnPsf').resolves('fake-txid')
       sandbox.stub(uut.bchWallet, 'send').resolves('fake-txid')
       sandbox.stub(uut.bchWallet.bchjs.Util, 'sleep').resolves()
-      sandbox.stub(uut.axios, 'post').resolves({ data: { fake: 'test-data' } })
+      sandbox.stub(uut.axios, 'post').resolves({
+        data: {
+          success: true,
+          hash: {
+            success: true,
+            hash: 'zdpuAwXjBcLRgCQMGSd5D45At7kS5kAGCQHUSbNH2aQiuL139'
+          }
+        }
+      })
 
       const data = {
         test: 'test'
@@ -225,8 +233,9 @@ describe('#write.js', () => {
       const result = await uut.postEntry(data)
       // console.log('result: ', result)
 
-      assert.equal(result.fake, 'test-data')
+      assert.equal(result.hash, 'zdpuAwXjBcLRgCQMGSd5D45At7kS5kAGCQHUSbNH2aQiuL139')
       assert.equal(result.paymentTxid, 'fake-txid')
+      assert.equal(result.success, true)
     })
   })
 
