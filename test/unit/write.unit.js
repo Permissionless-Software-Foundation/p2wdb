@@ -154,6 +154,7 @@ describe('#write.js', () => {
   describe('#burnPsf', () => {
     it('should provide TXID proof-of-burn', async () => {
       // Mock dependencies
+      sandbox.stub(uut.bchWallet, 'initialize').resolves()
       sandbox.stub(uut.bchWallet, 'burnTokens').resolves('fake-txid')
 
       const result = await uut.burnPsf()
