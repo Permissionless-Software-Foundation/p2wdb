@@ -83,6 +83,7 @@ describe('#write.js', () => {
         // Force desired code path.
         uut.bchWallet.isInitialized = true
         sandbox.stub(uut.bchWallet, 'getBalance').resolves(100)
+        sandbox.stub(uut.bchWallet, 'initialize').resolves()
 
         await uut.checkForSufficientFunds()
 
@@ -102,6 +103,7 @@ describe('#write.js', () => {
       mockData.tokenOutput01[0].qty = 10
       sandbox.stub(uut.bchWallet, 'listTokens').resolves(mockData.tokenOutput01)
       sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
+      sandbox.stub(uut.bchWallet, 'initialize').resolves()
 
       const result = await uut.checkForSufficientFunds()
       // console.log('result: ', result)
@@ -119,6 +121,7 @@ describe('#write.js', () => {
       sandbox.stub(uut.bchWallet, 'listTokens').resolves(mockData.tokenOutput01)
       sandbox.stub(uut, 'getWriteCostPsf').resolves(0.133)
       sandbox.stub(uut, 'getWriteCostBch').resolves({ bchCost: 10000, address: 'fake-addr' })
+      sandbox.stub(uut.bchWallet, 'initialize').resolves()
 
       const result = await uut.checkForSufficientFunds()
       // console.log('result: ', result)
