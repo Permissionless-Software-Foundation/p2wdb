@@ -16,14 +16,14 @@ Check out the [examples directory](./examples) for complete code examples for bo
 
 **Node module**
 
-`npm install p2wdb`
+`npm install --save p2wdb`
 
 ```javascript
 // module import
-import { Read, Write } from 'p2wdb'
+import { Read, Write, Pin } from 'p2wdb/index.js'
 
 // nodejs modules
-const { Read, Write } = require('p2wdb')
+const { Read, Write, Pin } = require('p2wdb/index')
 ```
 
 ### Read
@@ -90,18 +90,20 @@ The example below is copied from the [node.js write example](./examples/node.js/
 ```javascript
 // Replace this private key and public address with your own. You can generate
 // new values at wallet.fullstack.cash.
-const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
+const wif = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
 // SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
 
-const serverURL = 'http://localhost:5010'
-
-const { Write } = require('../../index')
-// const { Write } = require('p2wdb')
+const { Write } = require('p2wdb/index.js')
 
 async function writeNode () {
   try {
-    const write = new Write({ wif: WIF, serverURL, interface: 'consumer-api' })
+    // Instantiate the BCH wallet using a private key.
+    const bchWallet = new BchWallet(wif, { interface: 'consumer-api' })
+    await bchWallet.walletInfoPromise
+    await bchWallet.initialize()
+
+    const write = new Write({ bchWallet })
 
     // Generate the data that will be written to the P2WDB.
     const appId = 'test'
@@ -119,27 +121,32 @@ async function writeNode () {
 writeNode()
 ```
 
-### Pin
+### Pin an IPFS CID
 
-Some instances of P2WDB run the [p2wdb-pinning-service](https://github.com/Permissionless-Software-Foundation/p2wdb-pinning-service). Currently the network only supports pinning files 1MB or smaller. Pinning ensure that an IPFS node retains the data and makes it available to the IPFS network.
+Some instances of P2WDB run the [p2wdb-pinning-service](https://github.com/Permissionless-Software-Foundation/p2wdb-pinning-service). Currently the network only supports pinning files 1MB or smaller. Pinning ensure that an IPFS node retains the data and makes it available to the IPFS network. All P2WDB instances on the network that are running the p2wdb-pinning-service will pin the content, making it widely available across the world.
 
-Here is an example to pin a piece of content to the P2WDB pinning cluster:
+Here is an example to pin a piece of content to the P2WDB pinning service:
 ```js
 // Replace this private key and public address with your own. You can generate
 // new values at wallet.fullstack.cash.
-const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
+const wif = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
 // SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
 
-// Replace this with your own IPFS CID. It should be less than 1 MB in size.
+// Replace this with your own IPFS CID. The content it represents
+// should be less than 1 MB in size.
 const CID = 'bafybeidmxb6au63p6t7wxglks3t6rxgt6t26f3gx26ezamenznkjdnwqta'
 
-const { Pin } = require('../../index')
-// const { Pin } = require('p2wdb')
+const { Pin } = require('p2wdb/index.js')
 
 async function pinCid (cid) {
   try {
-    const pin = new Pin({ wif: WIF, interface: 'consumer-api' })
+    // Instantiate the BCH wallet using a private key.
+    const bchWallet = new BchWallet(wif, { interface: 'consumer-api' })
+    await bchWallet.walletInfoPromise
+    await bchWallet.initialize()
+
+    const pin = new Pin({ bchWallet })
 
     const outData = await pin.cid(cid)
     console.log('outData: ', outData)
@@ -151,6 +158,62 @@ async function pinCid (cid) {
 }
 pinCid(CID)
 ```
+
+### Pin JSON Data
+Often times, a developer needs to upload raw JSON data to IPFS. Instances of P2WDB running the [p2wdb-pinning-service](https://github.com/Permissionless-Software-Foundation/p2wdb-pinning-service) can retrieve JSON data uploaded to the P2WDB and pin it as its own IPFS CID. Here is an example:
+
+```javascript
+// Replace this private key and public address with your own. You can generate
+// new values at wallet.fullstack.cash.
+const wif = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
+// BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
+// SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
+
+const { Write, Pin } = require('p2wdb/index.js')
+
+async function pinJSON () {
+  try {
+    // Instantiate the BCH wallet using a private key.
+    const bchWallet = new BchWallet(wif, { interface: 'consumer-api' })
+    await bchWallet.walletInfoPromise
+    await bchWallet.initialize()
+
+    // This is an example of JSON data. This can be any arbitrary data, up to
+    // 10 KB is size.
+    const exampleJSON = {
+      about: 'This is an example of a JSON object',
+      a: 'b',
+      c: 42,
+      image: 'some-image-url'
+    }
+
+    // Write JSON data to the P2WDB
+    const write = new Write({ bchWallet })
+    const appId = 'token-data-001' // This can be any string.
+    const result1 = await write.postEntry(exampleJSON, appId)
+
+    // This is the P2WDB CID (which starts with the letter 'z')
+    const zcid = result1.hash
+    console.log(`Data added to P2WDB with this zcid: ${zcid}`)
+
+    // Request the P2WDB Pinning Service extract the data and pin it separately
+    // as an IPFS CID (which starts with 'bafy').
+    const pin = new Pin({ bchWallet })
+    const result2 = await pin.json(zcid)
+    const cid = result2.cid
+
+    console.log(`The example JSON object has been pinned to IPFS with this CID: ${cid}`)
+
+    // const cid =
+  } catch (err) {
+    console.error(err)
+  }
+}
+pinJSON()
+```
+
+
+
 
 # Licence
 
