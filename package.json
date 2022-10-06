@@ -31,6 +31,7 @@
   },
   "repository": "Permissionless-Software-Foundation/p2wdb",
   "dependencies": {
+    "@chris.troutner/retry-queue-commonjs": "1.0.8",
     "apidoc": "0.52.0",
     "axios": "0.24.0"
   },
