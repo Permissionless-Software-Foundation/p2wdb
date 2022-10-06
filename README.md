@@ -20,7 +20,8 @@ Check out the [examples directory](./examples) for complete code examples for bo
 
 ```javascript
 // module import
-import { Read, Write, Pin } from 'p2wdb'
+import P2WDB from 'p2wdb'
+const { Read, Write, Pin } = P2WDB
 
 // nodejs modules
 const { Read, Write, Pin } = require('p2wdb')
