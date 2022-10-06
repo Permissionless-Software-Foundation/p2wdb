@@ -20,10 +20,10 @@ Check out the [examples directory](./examples) for complete code examples for bo
 
 ```javascript
 // module import
-import { Read, Write, Pin } from 'p2wdb/index.js'
+import { Read, Write, Pin } from 'p2wdb'
 
 // nodejs modules
-const { Read, Write, Pin } = require('p2wdb/index')
+const { Read, Write, Pin } = require('p2wdb')
 ```
 
 ### Read
@@ -94,7 +94,7 @@ const wif = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
 // SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
 
-const { Write } = require('p2wdb/index.js')
+const { Write } = require('p2wdb')
 
 async function writeNode () {
   try {
@@ -137,7 +137,7 @@ const wif = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // should be less than 1 MB in size.
 const CID = 'bafybeidmxb6au63p6t7wxglks3t6rxgt6t26f3gx26ezamenznkjdnwqta'
 
-const { Pin } = require('p2wdb/index.js')
+const { Pin } = require('p2wdb')
 
 async function pinCid (cid) {
   try {
@@ -169,7 +169,7 @@ const wif = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
 // BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
 // SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
 
-const { Write, Pin } = require('p2wdb/index.js')
+const { Write, Pin } = require('p2wdb')
 
 async function pinJSON () {
   try {
