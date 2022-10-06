@@ -241,6 +241,17 @@ describe('#write.js', () => {
       assert.equal(result.paymentTxid, 'fake-txid')
       assert.equal(result.success, true)
     })
+
+    it('should catch, report, and throw errors', async () => {
+      try {
+        // Force desired code path
+        await uut.postEntry()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'data required to write to p2wdb')
+      }
+    })
   })
 
   describe('#getWriteCostBch', () => {

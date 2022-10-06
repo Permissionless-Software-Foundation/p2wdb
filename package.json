@@ -2,7 +2,7 @@
   "name": "p2wdb",
   "version": "2.0.0",
   "description": "A JavaScript npm library for reading from and writing to the PSF pay-to-write database (P2WDB).",
-  "main": "dist/p2wdb.min.js",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "npm run lint && TEST=unit nyc mocha test/unit/",
@@ -31,6 +31,7 @@
   },
   "repository": "Permissionless-Software-Foundation/p2wdb",
   "dependencies": {
+    "@chris.troutner/retry-queue-commonjs": "1.0.8",
     "apidoc": "0.52.0",
     "axios": "0.24.0"
   },
@@ -40,10 +41,10 @@
     "coveralls": "3.1.0",
     "husky": "4.3.8",
     "lodash.clonedeep": "4.5.0",
-    "minimal-slp-wallet": "5.0.3",
+    "minimal-slp-wallet": "5.2.1",
     "mocha": "^10.0.0",
     "nyc": "15.1.0",
-    "semantic-release": "^19.0.5",
+    "semantic-release": "19.0.5",
     "sinon": "9.2.2",
     "standard": "16.0.4",
     "tinyify": "3.0.0"
@@ -59,6 +60,16 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint && npm run build"
+    }
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/p2wdb.min.js"
+      },
+      "require": {
+        "default": "index.js"
+      }
     }
   }
 }
