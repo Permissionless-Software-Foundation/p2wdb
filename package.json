@@ -41,8 +41,9 @@
     "coveralls": "3.1.0",
     "husky": "4.3.8",
     "lodash.clonedeep": "4.5.0",
-    "minimal-slp-wallet": "5.2.1",
-    "mocha": "^10.0.0",
+    "minimal-ecash-wallet": "1.1.4",
+    "minimal-slp-wallet": "5.5.1",
+    "mocha": "10.0.0",
     "nyc": "15.1.0",
     "semantic-release": "19.0.5",
     "sinon": "9.2.2",
@@ -65,7 +66,9 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/p2wdb.min.js"
+        "default": "./dist/p2wdb.min.js",
+        "node": "./index.js",
+        "default": "./index.js"
       },
       "require": {
         "default": "./index.js"
