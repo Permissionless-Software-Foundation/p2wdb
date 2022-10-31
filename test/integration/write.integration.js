@@ -4,7 +4,7 @@
 
 // Public npm libraries
 const assert = require('chai').assert
-const BchWallet = require('minimal-slp-wallet/index')
+const BchWallet = require('minimal-slp-wallet')
 
 // Local libraries
 const WriteP2wdb = require('../../lib/write')

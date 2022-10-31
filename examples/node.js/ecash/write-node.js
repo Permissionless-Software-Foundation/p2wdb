@@ -3,28 +3,29 @@
 */
 
 // Global npm libraries
-const BchWallet = require('minimal-slp-wallet')
+const XecWallet = require('minimal-ecash-wallet')
 
 // Replace this private key and public address with your own. You can generate
 // new values at wallet.fullstack.cash.
-const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
-// BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
-// SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
+const WIF = 'Kx6VgfmaV3TZL7rxBfkY7g5eJQBeSRjudxhT3rycLkj7btXq32GH'
+// BCH Address: bitcoincash:qz0g9scd9jhdmr82dp8hk2rs3zrgtlj52sx8pkhxjq
+// eCash address: ecash:qz0g9scd9jhdmr82dp8hk2rs3zrgtlj52sl24avu5h
 
-const serverURL = 'https://p2wdb.fullstack.cash'
-// const serverURL = 'http://localhost:5010'
+// const serverURL = 'https://p2wdb.fullstack.cash'
+const serverURL = 'http://localhost:5010'
+const restURL = 'https://xec-consumer-or1-usa.fullstackcash.nl'
 
-const { Write } = require('../../index')
+const { Write } = require('../../../index')
 // const { Write } = require('p2wdb')
 
 async function writeNode () {
   try {
     // Instantiate the BCH wallet.
-    const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
-    await bchWallet.walletInfoPromise
-    await bchWallet.initialize()
+    const xecWallet = new XecWallet(WIF, { interface: 'consumer-api', restURL })
+    await xecWallet.walletInfoPromise
+    await xecWallet.initialize()
 
-    const write = new Write({ bchWallet, serverURL })
+    const write = new Write({ bchWallet: xecWallet, serverURL })
 
     // Generate the data that will be written to the P2WDB.
     const appId = 'test'
