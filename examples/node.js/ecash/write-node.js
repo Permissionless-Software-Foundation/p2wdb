@@ -11,8 +11,8 @@ const WIF = 'Kx6VgfmaV3TZL7rxBfkY7g5eJQBeSRjudxhT3rycLkj7btXq32GH'
 // BCH Address: bitcoincash:qz0g9scd9jhdmr82dp8hk2rs3zrgtlj52sx8pkhxjq
 // eCash address: ecash:qz0g9scd9jhdmr82dp8hk2rs3zrgtlj52sl24avu5h
 
-// const serverURL = 'https://p2wdb.fullstack.cash'
-const serverURL = 'http://localhost:5010'
+const serverURL = 'https://xec-p2wdb.fullstack.cash'
+// const serverURL = 'http://localhost:5010'
 const restURL = 'https://xec-consumer-or1-usa.fullstackcash.nl'
 
 const { Write } = require('../../../index')
