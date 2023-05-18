@@ -241,16 +241,15 @@ async function writeNode () {
     console.log(`Ticket: ${JSON.stringify(result, null, 2)}`)
 
     /*
-    Ticket: {
-      "txid": "5d25939f16be9b314c8e5c382d7bfca023838e30141c94a85d29c65094e01cd1",
-      "message": "2023-05-18T17:18:18.605Z",
-      "signature": "ILK2da0GVtUPZuplYV/XDxzpmKlkrXMQ9wh4k+3/KueILK/VGWN5TbjAYAEp2T0ItOZ0qc+ETiKbbPBy3SO+lkg=",
-      "appId": "test",
-      "data": {},
-      "timestamp": "2023-05-18T17:18:18.605Z",
-      "localTimeStamp": "5/18/2023, 10:18:18 AM"
-    }
-
+      Ticket: {
+        "txid": "5d25939f16be9b314c8e5c382d7bfca023838e30141c94a85d29c65094e01cd1",
+        "message": "2023-05-18T17:18:18.605Z",
+        "signature": "ILK2da0GVtUPZuplYV/XDxzpmKlkrXMQ9wh4k+3/KueILK/VGWN5TbjAYAEp2T0ItOZ0qc+ETiKbbPBy3SO+lkg=",
+        "appId": "test",
+        "data": {},
+        "timestamp": "2023-05-18T17:18:18.605Z",
+        "localTimeStamp": "5/18/2023, 10:18:18 AM"
+      }
     */
   } catch (err) {
     console.error(err)
