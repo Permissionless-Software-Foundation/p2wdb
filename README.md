@@ -213,6 +213,50 @@ async function pinJSON () {
 pinJSON()
 ```
 
+### Create Ticket
+Writing an entry to the P2WDB can take a few minutes, when a PSF token is burned on-the-fly. The `createTicket()` function is useful for generating a pre-burned TXID. This allows writing to be much faster since the token burning can be done beforehand.
+
+```javascript
+// Replace this private key and public address with your own. You can generate
+// new values at wallet.fullstack.cash.
+const wif = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
+// BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
+// SLP Address: simpleledger:qqkg30ryje97al52htqwvveha538y7gttyz8q2dd7j
+
+const { Write } = require('p2wdb')
+
+async function writeNode () {
+  try {
+    // Instantiate the BCH wallet using a private key.
+    const bchWallet = new BchWallet(wif, { interface: 'consumer-api' })
+    await bchWallet.walletInfoPromise
+    await bchWallet.initialize()
+
+    const write = new Write({ bchWallet })
+
+    // Generate the data that will be written to the P2WDB.
+    const appId = 'test'
+
+    const result = await write.createTicket(appId)
+    console.log(`Ticket: ${JSON.stringify(result, null, 2)}`)
+
+    /*
+      Ticket: {
+        "txid": "5d25939f16be9b314c8e5c382d7bfca023838e30141c94a85d29c65094e01cd1",
+        "message": "2023-05-18T17:18:18.605Z",
+        "signature": "ILK2da0GVtUPZuplYV/XDxzpmKlkrXMQ9wh4k+3/KueILK/VGWN5TbjAYAEp2T0ItOZ0qc+ETiKbbPBy3SO+lkg=",
+        "appId": "test",
+        "data": {},
+        "timestamp": "2023-05-18T17:18:18.605Z",
+        "localTimeStamp": "5/18/2023, 10:18:18 AM"
+      }
+    */
+  } catch (err) {
+    console.error(err)
+  }
+}
+writeNode()
+```
 
 
 

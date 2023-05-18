@@ -270,4 +270,71 @@ describe('#write.js', () => {
       assert.equal(result.address, 'fake-address')
     })
   })
+
+  describe('#createTicket', () => {
+    it('should create a new per-burn ticket', async () => {
+      const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
+      await bchWallet.walletInfoPromise
+
+      const serverURL = 'http://localhost:5700'
+      uut = new Write({ bchWallet, serverURL })
+
+      // Mock dependencies to force code path
+      sandbox.stub(uut, 'checkForSufficientFunds').resolves({
+        hasEnoughPsf: 10,
+        hasEnoughBch: false,
+        bchAddr: ''
+      })
+      sandbox.stub(uut, 'burnPsf').resolves('fake-txid')
+      // const postStub = sandbox.stub(uut.axios, 'post').resolves({ data: 'test-data' })
+
+      const result = await uut.createTicket()
+      // console.log('result: ', result)
+
+      // Assert that the returned object has the expected properties.
+      assert.property(result, 'txid')
+      assert.property(result, 'appId')
+      assert.property(result, 'data')
+      assert.property(result, 'timestamp')
+      assert.property(result, 'localTimeStamp')
+      assert.property(result, 'signature')
+      assert.property(result, 'message')
+    })
+
+    it('should catch, report, and throw errors', async () => {
+      try {
+        // Force desired code path
+        sandbox.stub(uut.retryQueue, 'addToQueue').rejects(new Error('test error'))
+
+        await uut.createTicket()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should throw an error if the wallet does not have PSF tokens', async () => {
+      try {
+        const bchWallet = new BchWallet(WIF, { interface: 'consumer-api' })
+        await bchWallet.walletInfoPromise
+
+        const serverURL = 'http://localhost:5700'
+        uut = new Write({ bchWallet, serverURL })
+
+        // Mock dependencies to force code path
+        sandbox.stub(uut, 'checkForSufficientFunds').resolves({
+          hasEnoughPsf: false,
+          hasEnoughBch: false,
+          bchAddr: ''
+        })
+
+        await uut.createTicket()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'wallet does not have enough PSF tokens')
+      }
+    })
+  })
 })
