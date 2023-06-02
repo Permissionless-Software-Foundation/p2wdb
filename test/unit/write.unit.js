@@ -337,4 +337,15 @@ describe('#write.js', () => {
       }
     })
   })
+
+  describe('#postEntryForBch', () => {
+    it('should call the REST API endpoint', async () => {
+      // Mock dependencies and force desired code path.
+      sandbox.stub(uut.axios, 'post').resolves({ foo: 'bar' })
+
+      const result = await uut.postEntryForBch({})
+
+      assert.property(result, 'foo')
+    })
+  })
 })
